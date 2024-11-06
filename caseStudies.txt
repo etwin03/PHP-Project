@@ -1,0 +1,5 @@
+[
+["Arenavirus Lassa Fever", ['fever, chills, headache, anorexia, weakness, vomiting', '', '']],
+["Arenavirus Lassa Fever", ['fever, weakness, anemia', '', 'diabetes, West Africa']],
+["Arenavirus Lassa Fever", ['fever, headache, tachycardia, stiff neck', '', '']]
+]
