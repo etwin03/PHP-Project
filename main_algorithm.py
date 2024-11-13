@@ -13,12 +13,12 @@ def callAPI(call, input1 = None, input2 = None):
     return data.json()
 
 def processUserData(userData):
-    symptoms = userData[0].split(', ')    #split different symptoms
-    testResults = userData[1].split(', ')    #split different test results
-    riskFactors = userData[2].split(', ')
+    symptoms = userData[0].split(',')    #split different symptoms
+    testResults = userData[1].split(',')    #split different test results
+    riskFactors = userData[2].split(',')
 
     for i in range(len(symptoms)):    #format symptoms
-        symptom = symptoms[i].split('; ')
+        symptom = symptoms[i].split(';')
         if symptom == []:
             symptom.append(None)
             symptom.append(None)
@@ -33,7 +33,7 @@ def processUserData(userData):
         symptoms[i] = symptom
 
     for i in range(len(testResults)):    #format test results
-        testResult = testResults[i].split('; ')
+        testResult = testResults[i].split(';')
         if testResult == []:
             testResult.append(None)
             testResult.append(None)
