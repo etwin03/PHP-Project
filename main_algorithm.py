@@ -105,17 +105,23 @@ def createAllMicrobeData():
             else:
                 microbeRiskFactors[microbeID].append(riskFactor['factor'].lower().strip())
 
+    microbeTypes = {}
+    microbeTypes['bacteria'] = [subtype['subtypeid'] for subtype in callAPI('getSubtypesByClassification', 'bacteria')]
+    microbeTypes['fungi'] = [subtype['subtypeid'] for subtype in callAPI('getSubtypesByClassification', 'fungi')]
+    microbeTypes['virus'] = [subtype['subtypeid'] for subtype in callAPI('getSubtypesByClassification', 'virus')]
+    microbeTypes['parasite'] = [subtype['subtypeid'] for subtype in callAPI('getSubtypesByClassification', 'parasite')]
+
 
 
     f = open('allMicrobeData.txt', 'w+')    #store somewhere temporarily
-    f.write(str([microbeSymptoms, microbeTestResults, microbeRiskFactors, symptomRatios]))
+    f.write(str([microbeSymptoms, microbeTestResults, microbeRiskFactors, symptomRatios, microbeTypes]))
     f.close()
 
     return
 
 def cosineSimilarity(microbeList, symptoms):
     f = open('allMicrobeData.txt', 'r')    #get symptom and test results
-    allMicrobeSymptoms, allMicrobeTestResults, allMicrobeRiskFactors, symptomRatios = eval(f.read())
+    allMicrobeSymptoms, allMicrobeTestResults, allMicrobeRiskFactors, symptomRatios, microbeTypes = eval(f.read())
     f.close()
 
     microbeCosines = {}
@@ -143,10 +149,16 @@ def scaleWeight(_dict, _key, weight):
 
 PERTINENT_NEGATIVE_WEIGHT = 0.66
 RISK_FACTOR_WEIGHT = 1.5
+MICROBE_TYPE_CUTOFF = 15
+MICROBE_TYPE_WEIGHT = 2
 
 if __name__ == '__main__': 
     
-    # createAllMicrobeData() #run at start of instance
+    createAllMicrobeData() #run at start of instance
+
+    f = open('allMicrobeData.txt', 'r')    #get symptom and test results
+    allMicrobeSymptoms, allMicrobeTestResults, allMicrobeRiskFactors, symptomRatios, microbeTypes = eval(f.read())
+    f.close()
 
     ### user input [symptoms], [test results]
     userData=[input("Enter symptoms (a; modifier, b..., c...): "),
@@ -195,6 +207,33 @@ if __name__ == '__main__':
     ### sort microbe IDs
     sortedMicrobes = dict(sorted(microbeCosines.items(), key=lambda x: x[1], reverse=True))
 
+    ### weight microbes by most common type
+    cutoff = MICROBE_TYPE_CUTOFF
+    types = [0, 0, 0, 0]
+    for microbe in sortedMicrobes:
+        types[0] += 1 if microbe in microbeTypes['bacteria'] else 0
+        types[1] += 1 if microbe in microbeTypes['fungi'] else 0
+        types[2] += 1 if microbe in microbeTypes['virus'] else 0
+        types[3] += 1 if microbe in microbeTypes['parasite'] else 0
+        
+        cutoff -= 1
+        if cutoff == 0:
+            break
+    if types[0] == max(types):
+        maxType = 'bacteria'
+    if types[1] == max(types):
+        maxType = 'fungi'
+    if types[2] == max(types):
+        maxType = 'virus'
+    if types[3] == max(types):
+        maxType = 'parasite'
+    
+    for microbe in microbeCosines:
+        if microbe in microbeTypes[maxType]:
+            microbeCosines[microbe] *= MICROBE_TYPE_WEIGHT
+
+    sortedMicrobes = dict(sorted(microbeCosines.items(), key=lambda x: x[1], reverse=True))
+
     ### swap IDs with names
     subtypeNames = {}
     allSubtypes = callAPI('getAllSubtypes')
@@ -205,8 +244,5 @@ if __name__ == '__main__':
     for microbe in sortedMicrobes:
         sortedMicrobeNames[subtypeNames[microbe]] = sortedMicrobes[microbe]
 
-    count = 1
-    for microbe in sortedMicrobeNames:
-        print(count, microbe, sortedMicrobeNames[microbe])
-        count += 1
+
 
