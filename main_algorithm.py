@@ -13,12 +13,12 @@ def callAPI(call, input1 = None, input2 = None):
     return data.json()
 
 def processUserData(userData):
-    symptoms = userData[0].split(',')    #split different symptoms
-    testResults = userData[1].split(',')    #split different test results
-    riskFactors = userData[2].split(',')
+    symptoms = userData[0].split(',  ')    #split different symptoms
+    testResults = userData[1].split(',  ')    #split different test results
+    riskFactors = userData[2].split(',  ')
 
     for i in range(len(symptoms)):    #format symptoms
-        symptom = symptoms[i].split(';')
+        symptom = symptoms[i].split('; ')
         if symptom == []:
             symptom.append(None)
             symptom.append(None)
@@ -150,7 +150,7 @@ def scaleWeight(_dict, _key, weight):
 PERTINENT_NEGATIVE_WEIGHT = 0.66
 RISK_FACTOR_WEIGHT = 1.5
 MICROBE_TYPE_CUTOFF = 15
-MICROBE_TYPE_WEIGHT = 2
+MICROBE_TYPE_WEIGHT = 1.5
 
 if __name__ == '__main__': 
     
@@ -161,9 +161,9 @@ if __name__ == '__main__':
     f.close()
 
     ### user input [symptoms], [test results]
-    userData=[input("Enter symptoms (a; modifier, b..., c...): "),
-            input("Enter test results (a; positiveresult, b..., c...): "),
-            input("Enter risk factors (a, b, c): ")]
+    userData=[input("Enter symptoms (a; modifier,  b...,  c...): "),
+            input("Enter test results (a; positiveresult,  b...,  c...): "),
+            input("Enter risk factors (a,  b,  c): ")]
 
     symptoms, testResults, riskFactors = processUserData(userData)
 
@@ -243,6 +243,3 @@ if __name__ == '__main__':
     sortedMicrobeNames = {}
     for microbe in sortedMicrobes:
         sortedMicrobeNames[subtypeNames[microbe]] = sortedMicrobes[microbe]
-
-
-
