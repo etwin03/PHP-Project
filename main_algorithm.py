@@ -154,7 +154,7 @@ MICROBE_TYPE_WEIGHT = 1.5
 
 if __name__ == '__main__': 
     
-    createAllMicrobeData() #run at start of instance
+    # createAllMicrobeData() #run at start of instance
 
     f = open('allMicrobeData.txt', 'r')    #get symptom and test results
     allMicrobeSymptoms, allMicrobeTestResults, allMicrobeRiskFactors, symptomRatios, microbeTypes = eval(f.read())
@@ -243,3 +243,8 @@ if __name__ == '__main__':
     sortedMicrobeNames = {}
     for microbe in sortedMicrobes:
         sortedMicrobeNames[subtypeNames[microbe]] = sortedMicrobes[microbe]
+
+    count = 1
+    for microbe in sortedMicrobeNames:
+        print(count, microbe)
+        count += 1
