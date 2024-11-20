@@ -15,7 +15,7 @@ def callAPI(call, input1 = None, input2 = None):
 def processUserData(userData):
     symptoms = userData[0].split(',  ')    #split different symptoms
     testResults = userData[1].split(',  ')    #split different test results
-    riskFactors = userData[2].split(',  ')
+    riskFactors = userData[2].split(',  ')     #two spaces because of database formatting
 
     for i in range(len(symptoms)):    #format symptoms
         symptom = symptoms[i].split('; ')
@@ -33,7 +33,7 @@ def processUserData(userData):
         symptoms[i] = symptom
 
     for i in range(len(testResults)):    #format test results
-        testResult = testResults[i].split(';')
+        testResult = testResults[i].split('; ')
         if testResult == []:
             testResult.append(None)
             testResult.append(None)
@@ -146,27 +146,10 @@ def scaleWeight(_dict, _key, weight):
     else:
         _dict[_key] = weight
 
-
-PERTINENT_NEGATIVE_WEIGHT = 0.66
-RISK_FACTOR_WEIGHT = 1.5
-MICROBE_TYPE_CUTOFF = 15
-MICROBE_TYPE_WEIGHT = 1.5
-
-if __name__ == '__main__': 
-    
-    # createAllMicrobeData() #run at start of instance
-
+def main_algorithm(symptoms, testResults, riskFactors):
     f = open('allMicrobeData.txt', 'r')    #get symptom and test results
     allMicrobeSymptoms, allMicrobeTestResults, allMicrobeRiskFactors, symptomRatios, microbeTypes = eval(f.read())
     f.close()
-
-    ### user input [symptoms], [test results]
-    userData=[input("Enter symptoms (a; modifier,  b...,  c...): "),
-            input("Enter test results (a; positiveresult,  b...,  c...): "),
-            input("Enter risk factors (a,  b,  c): ")]
-
-    symptoms, testResults, riskFactors = processUserData(userData)
-
 
     ### find microbes with correct symptoms
     microbeWeights = {}
@@ -244,7 +227,31 @@ if __name__ == '__main__':
     for microbe in sortedMicrobes:
         sortedMicrobeNames[subtypeNames[microbe]] = sortedMicrobes[microbe]
 
+    return sortedMicrobes, sortedMicrobeNames
+
+
+PERTINENT_NEGATIVE_WEIGHT = 0.66
+RISK_FACTOR_WEIGHT = 1.5
+MICROBE_TYPE_CUTOFF = 15
+MICROBE_TYPE_WEIGHT = 2
+
+if __name__ == '__main__': 
+    createAllMicrobeData() #run at start of instance
+
+    ### user input [symptoms], [test results]
+    userData=[input("Enter symptoms (a; modifier, b..., c...): "),
+            input("Enter test results (a; positiveresult, b..., c...): "),
+            input("Enter risk factors (a, b, c): ")]
+
+    sortedMicrobes, sortedMicrobeNames = main_algorithm(processUserData(userData))
+
     count = 1
     for microbe in sortedMicrobeNames:
         print(count, microbe)
         count += 1
+
+
+
+
+
+
