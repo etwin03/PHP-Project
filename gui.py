@@ -16,7 +16,7 @@ class UIScreen:
 	def __init__(self):
 		# Initial set up
 		self.root = Tk()
-		self.root.geometry("800x600")
+		self.root.geometry("1000x600")
 
 		self.frame = Frame(self.root)
 		self.frame.grid(row=0,column=0, sticky="n")
@@ -48,7 +48,10 @@ class UIScreen:
 			count += 1
 
 		# plot
+		plt.rcParams["figure.figsize"] = (10,4)
 		fig, ax = plt.subplots()
+
+		
 
 		p = ax.barh(np.arange(5), topTenMicrobeValues)
 		ax.bar_label(p, label_type='center', fmt='%.3f')	
@@ -58,6 +61,9 @@ class UIScreen:
 			
 
 		ax.set(xlim=(0, sortedMicrobeNames[topTenMicrobeNames[0]] * 1.5))
+
+		#plt.figure(constrained_layout=True)
+		plt.tight_layout()
 
 		plt.savefig("outputimage.png")
 
@@ -93,7 +99,7 @@ class UIScreen:
 
 		# Create a reusable canvas for displaying images
 		self.canvas = Canvas(self.root, height=200, width=200)
-		self.canvas.grid(row=2)
+		self.canvas.grid(column=0, columnspan=2, row=4)
 		# Run the main loop to keep the screen up
 		self.root.mainloop()
 
