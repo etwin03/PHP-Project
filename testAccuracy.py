@@ -10,6 +10,12 @@ f.close()
 
 ranks = []
 averageRank = 0
+averageBacteriaRank = 0
+averageVirusRank = 0
+averageFungiRank = 0
+bacteriaCount = 0
+virusCount = 0
+fungiCount = 0
 notFoundCount = 0
 
 for caseStudy in caseStudies:
@@ -92,19 +98,34 @@ for caseStudy in caseStudies:
         sortedMicrobeNames[subtypeNames[microbe]] = sortedMicrobes[microbe]
 
     try: 
-        rank = list(sortedMicrobeNames.keys()).index(caseStudy[0])
+        rank = list(sortedMicrobeNames.keys()).index(caseStudy[0]) + 1
     except:
         rank = -1
     print(rank)
     if rank != -1:
         averageRank += rank
+        if caseStudy[2] == 'bacteria':
+            averageBacteriaRank += rank
+            bacteriaCount += 1
+        if caseStudy[2] == 'virus':
+            averageVirusRank += rank
+            virusCount += 1
+        if caseStudy[2] == 'fungi':
+            averageFungiRank += rank
+            fungiCount += 1
     else:
         notFoundCount += 1
     ranks.append([caseStudy[0], rank])
 
 averageRank /= len(caseStudies) - notFoundCount
+averageBacteriaRank /= bacteriaCount
+averageVirusRank /= virusCount
+averageFungiRank /= fungiCount
 print(averageRank)
 ranks.append(["Average Rank", averageRank])
+ranks.append(["Bacteria Average Rank", averageBacteriaRank])
+ranks.append(["Virus Average Rank", averageVirusRank])
+ranks.append(["Fungi Average Rank", averageFungiRank])
 
 f = open('ranks.txt', 'a+')
 f.write(str(ranks) + '\n')
