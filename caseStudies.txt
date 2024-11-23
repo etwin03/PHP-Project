@@ -28,5 +28,8 @@
 ["Nairovirus Crimean-Congo hemorrhagic fever", ['fever,  vomiting', '', ''], 'virus'],
 ["Blastomyces gilchristii", ['cough,  nausea,  pain; abdominal,  tachypnea', '', 'diabetes,  IV drug use'], 'fungi'],
 ["Blastomyces gilchristii", ['pain; abdominal,  pancreatitis', '', ''], 'fungi'],
-["Blastomyces gilchristii", ['cough,  nausea,  pain; abdominal,  pneumonia,  fever', '', 'IV drug use'], 'fungi']
+["Blastomyces gilchristii", ['cough,  nausea,  pain; abdominal,  pneumonia,  fever', '', 'IV drug use'], 'fungi'],
+["Parvovirs B19", ['anemia,  weakness,  melena', '', ''], 'virus'],
+["Parvovirs B19", ['fatigue,  shortness of breath,  anemia', '', ''], 'virus'],
+["Parvovirs B19", ['rash,  arthralgia,  fever', '', ''], 'virus']
 ]
