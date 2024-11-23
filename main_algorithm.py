@@ -221,7 +221,15 @@ def main_algorithm(symptoms, testResults, riskFactors):
     subtypeNames = {}
     allSubtypes = callAPI('getAllSubtypes')
     for subtype in allSubtypes:
-        subtypeNames[subtype['subtypeid']] = f'{subtype["genus"]} {subtype["species"]}'
+        if subtype["classification"] == 'Bacteria':
+            subtypeNames[subtype['subtypeid']] = f'{subtype["genus"]} {subtype["species"]}0'
+        if subtype["classification"] == 'Virus':
+            subtypeNames[subtype['subtypeid']] = f'{subtype["genus"]} {subtype["species"]}1'
+        if subtype["classification"] == 'Fungi':
+            subtypeNames[subtype['subtypeid']] = f'{subtype["genus"]} {subtype["species"]}2'
+        if subtype["classification"] == 'Parasite':
+            subtypeNames[subtype['subtypeid']] = f'{subtype["genus"]} {subtype["species"]}3'
+        
 
     sortedMicrobeNames = {}
     for microbe in sortedMicrobes:
@@ -249,7 +257,7 @@ if __name__ == '__main__':
 
     count = 1
     for microbe in sortedMicrobeNames:
-        print(count, microbe)
+        print(count, microbe[0:-1])
         count += 1
 
 

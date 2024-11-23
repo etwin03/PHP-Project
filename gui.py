@@ -31,6 +31,7 @@ class UIScreen:
 		userData = [self.symptoms.get(), self.testResults.get(), self.riskFactors.get()]
 		symptoms, testResults, riskFactors = processUserData(userData)
 		# Run the algorithm here
+		global sortedMicrobeNames
 		sortedMicrobes, sortedMicrobeNames = main_algorithm(symptoms, testResults, riskFactors)
 
 		# Display a pictorial representation here
@@ -38,12 +39,14 @@ class UIScreen:
 		# make data:
 
 		topTenMicrobeNames = []
+		topTenMicrobeNames2 = []
 		topTenMicrobeValues = []
 		count = 0
 		for microbe in sortedMicrobeNames:
 			if count == 5:
 				break
 			topTenMicrobeNames.append(microbe)
+			topTenMicrobeNames2.append(microbe[0:-1])
 			topTenMicrobeValues.append(sortedMicrobeNames[microbe])
 			count += 1
 
@@ -56,7 +59,7 @@ class UIScreen:
 		p = ax.barh(np.arange(5), topTenMicrobeValues)
 		ax.bar_label(p, label_type='center', fmt='%.3f')	
 
-		ax.set_yticks(np.arange(5), labels=topTenMicrobeNames)
+		ax.set_yticks(np.arange(5), labels=topTenMicrobeNames2)
 		ax.invert_yaxis()
 			
 
@@ -77,9 +80,30 @@ class UIScreen:
 		self.canvas.config(height=self.img.height(), width=self.img.width())
 		self.canvas.update()
 
-
+	def displayRanks(self):
+		for widget in self.frame.grid_slaves():
+			widget.grid_forget()
+		self.canvas.delete('all')
+		tRanks = Text(self.frame)
+		count = 1
+		for microbe in sortedMicrobeNames:
+			if microbe[-1] == '0':
+				tRanks.insert(END, '\n' + f'{count}. {microbe[0:-1]}')
+			if microbe[-1] == '1':
+				tRanks.insert(END, '\n' + f'{count}. {microbe[0:-1]}')
+			if microbe[-1] == '2':
+				tRanks.insert(END, '\n' + f'{count}. {microbe[0:-1]}')
+			if microbe[-1] == '3':
+				tRanks.insert(END, '\n' + f'{count}. {microbe[0:-1]}')
+			count += 1
+		tRanks.grid(column=0, row=0)
+		ttk.Button(self.frame, text="Return", command=self.run).grid(column=1, row=1)
+			
 
 	def run(self):
+		for widget in self.frame.grid_slaves():
+			widget.grid_forget()
+
 		# Variables for holding data
 		self.symptoms = StringVar()
 		self.testResults = StringVar()
@@ -96,6 +120,7 @@ class UIScreen:
 		eTestResults.grid(column=1, row=1, sticky = 'w')
 		eRiskFactors.grid(column=1, row=2, sticky = 'w')
 		ttk.Button(self.frame, text="Submit", command=self.submit).grid(column=0, row=3)
+		ttk.Button(self.frame, text="Display Ranks", command=self.displayRanks).grid(column=2,row=4)
 
 		# Create a reusable canvas for displaying images
 		self.canvas = Canvas(self.root, height=200, width=200)
