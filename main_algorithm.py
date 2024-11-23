@@ -236,14 +236,16 @@ MICROBE_TYPE_CUTOFF = 15
 MICROBE_TYPE_WEIGHT = 2
 
 if __name__ == '__main__': 
-    createAllMicrobeData() #run at start of instance
+    #createAllMicrobeData() #run at start of instance
 
     ### user input [symptoms], [test results]
     userData=[input("Enter symptoms (a; modifier, b..., c...): "),
             input("Enter test results (a; positiveresult, b..., c...): "),
             input("Enter risk factors (a, b, c): ")]
+    
+    symptoms, testResults, riskFactors = processUserData(userData)
 
-    sortedMicrobes, sortedMicrobeNames = main_algorithm(processUserData(userData))
+    sortedMicrobes, sortedMicrobeNames = main_algorithm(symptoms, testResults, riskFactors)
 
     count = 1
     for microbe in sortedMicrobeNames:
